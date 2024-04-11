@@ -47,7 +47,7 @@ void can_init(void)
         filter.FilterMaskIdHigh = ((~(CAN_ID_SCU ^ CAN_ID_CCU)) << 5) | 0x8;
     }
 
-    filter.FilterMaskIdLow = (0x7FF << 5) | 0x8;
+    filter.FilterMaskIdLow = ((~(CAN_ID_TCU ^ CAN_ID_MCU)) << 5) | 0x8;
     filter.FilterFIFOAssignment = CAN_RX_FIFO0;
     filter.FilterBank = 0;
     filter.FilterMode = CAN_FILTERMODE_IDMASK;
