@@ -289,7 +289,7 @@ int main(void)
                             } else if ((ScuStatus == AVH_OFF && (! R_Gear)) && 15 < Speed || (ScuStatus == AVH_ON && R_Gear)) { // Transmit message for Enable or disable auto vehicle hold
                                 if(DebugMode == DEBUG){
                                     // Output Information message
-                                    printf_("# Information: Send Frame.\n");
+                                    printf_("# Information: Send Frame Speed=%3.1f R=%d.\n", Speed, R_Gear);
                                 }
                                 if (MAX_RETRY <= Retry) { // Previous enable or disable auto vehicle hold message failed
                                     if(DebugMode == DEBUG){
