@@ -7,6 +7,7 @@
 #define CAN_ID_CCU 0x6BB
 #define CAN_ID_SCU 0x32B
 #define CAN_ID_TCU 0x048
+#define CAN_ID_MCU 0x139
 
 // CCU and TCU STATUS
 enum cu_status {
