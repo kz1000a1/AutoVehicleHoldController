@@ -166,6 +166,7 @@ int main(void)
     static uint16_t PreviousCanId = CAN_ID_CCU;
     static uint8_t Retry = 0;
     static uint8_t R_Gear = 0;
+    static float Speed = 0;
 
     // Initialize peripherals
     system_init();
@@ -196,6 +197,10 @@ int main(void)
 
             if(DebugMode != CANDUMP){
                 switch (rx_msg_header.StdId) {
+                    case CAN_ID_MCU:
+                        Speed = (rx_frame->data[2] + ((rx_frame->data[3] & 0x1f) << 8)) * 0.05625;
+                        break;
+			
                     case CAN_ID_TCU:
                         if(R_Gear != (rx_msg_data[3] == 0x03)){
 			    if(Status == SUCCEEDED){
@@ -281,7 +286,7 @@ int main(void)
                                     printf_("# Information: READY.\n");
                                     printf_("# Information: Status (CCU=%d SCU=%d TCU=%d R=%d).\n", CcuStatus, ScuStatus, TcuStatus, R_Gear);
                                 }
-                            } else if ((ScuStatus == AVH_OFF && (! R_Gear)) || (ScuStatus == AVH_ON && R_Gear)) { // Transmit message for Enable or disable auto vehicle hold
+                            } else if ((ScuStatus == AVH_OFF && (! R_Gear)) && 15 < Speed || (ScuStatus == AVH_ON && R_Gear)) { // Transmit message for Enable or disable auto vehicle hold
                                 if(DebugMode == DEBUG){
                                     // Output Information message
                                     printf_("# Information: Send Frame.\n");
@@ -296,7 +301,7 @@ int main(void)
                                 } else {
                                     Retry++;
                                     led_blink(Retry);
-                                    for(int i = 0;i < 5;i++){
+                                    for(int i = 0;i < 1;i++){
                                         HAL_Delay(50);
                                         if(R_Gear){
                                             send_disable_frame(rx_msg_data); // Transmit message
