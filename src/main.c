@@ -198,7 +198,7 @@ int main(void)
             if(DebugMode != CANDUMP){
                 switch (rx_msg_header.StdId) {
                     case CAN_ID_MCU:
-                        Speed = (rx_frame->data[2] + ((rx_frame->data[3] & 0x1f) << 8)) * 0.05625;
+                        Speed = (rx_msg_data[2] + ((rx_msg_data[3] & 0x1f) << 8)) * 0.05625;
                         break;
 			
                     case CAN_ID_TCU:
@@ -286,7 +286,7 @@ int main(void)
                                     printf_("# Information: READY.\n");
                                     printf_("# Information: Status (CCU=%d SCU=%d TCU=%d R=%d).\n", CcuStatus, ScuStatus, TcuStatus, R_Gear);
                                 }
-                            } else if ((ScuStatus == AVH_OFF && (! R_Gear)) && 15 < Speed || (ScuStatus == AVH_ON && R_Gear)) { // Transmit message for Enable or disable auto vehicle hold
+                            } else if ((ScuStatus == AVH_OFF && (! R_Gear) && 15 < Speed) || (ScuStatus == AVH_ON && R_Gear)) { // Transmit message for Enable or disable auto vehicle hold
                                 if(DebugMode == DEBUG){
                                     // Output Information message
                                     printf_("# Information: Send Frame Speed=%3.1f R=%d.\n", Speed, R_Gear);
