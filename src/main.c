@@ -187,7 +187,7 @@ int main(void)
         if(is_can_msg_pending(CAN_RX_FIFO0)){
             can_rx(&rx_msg_header, rx_msg_data);
 
-            if(DebugMode == CANDUMP || (DebugMode == DEBUG && (rx_msg_header.StdId == CAN_ID_TCU || rx_msg_header.StdId == CAN_ID_SCU || rx_msg_header.StdId == CAN_ID_CCU))){
+            if(DebugMode == CANDUMP || (DebugMode == DEBUG && (rx_msg_header.StdId == CAN_ID_TCU || rx_msg_header.StdId == CAN_ID_SCU || rx_msg_header.StdId == CAN_ID_CCU || rx_msg_header.StdId == CAN_ID_MCU))){
                 print_rx_frame(&rx_msg_header, rx_msg_data);
             }
             
@@ -289,7 +289,7 @@ int main(void)
                             } else if ((ScuStatus == AVH_OFF && (! R_Gear) && 15 < Speed) || (ScuStatus == AVH_ON && R_Gear)) { // Transmit message for Enable or disable auto vehicle hold
                                 if(DebugMode == DEBUG){
                                     // Output Information message
-                                    printf_("# Information: Send Frame Speed=%3.1f R=%d.\n", Speed, R_Gear);
+                                    printf_("# Information: Send Frame Speed=%.1f R=%d.\n", Speed, R_Gear);
                                 }
                                 if (MAX_RETRY <= Retry) { // Previous enable or disable auto vehicle hold message failed
                                     if(DebugMode == DEBUG){
@@ -301,7 +301,7 @@ int main(void)
                                 } else {
                                     Retry++;
                                     led_blink(Retry);
-                                    for(int i = 0;i < 1;i++){
+                                    for(int i = 0;i < 5;i++){
                                         HAL_Delay(50);
                                         if(R_Gear){
                                             send_disable_frame(rx_msg_data); // Transmit message
@@ -320,7 +320,7 @@ int main(void)
                             } else { // Unexpected case
                                 if(DebugMode == DEBUG){
                                     // Output Warning message
-                                    printf_("# Warning: Unexpected case (CCU=%d SCU=%d TCU=%d).\n", CcuStatus, ScuStatus, TcuStatus);
+                                    printf_("# Warning: Unexpected case (CCU=%d SCU=%d TCU=%d Speed=%.1f).\n", CcuStatus, ScuStatus, TcuStatus, Speed);
                                 }
                             }
                         }
