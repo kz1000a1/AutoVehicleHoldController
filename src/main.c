@@ -289,7 +289,7 @@ int main(void)
                             } else if ((ScuStatus == AVH_OFF && (! R_Gear) && 15 < Speed) || (ScuStatus == AVH_ON && R_Gear)) { // Transmit message for Enable or disable auto vehicle hold
                                 if(DebugMode == DEBUG){
                                     // Output Information message
-                                    printf_("# Information: Send Frame Speed=%.1f R=%d.\n", Speed, R_Gear);
+                                    printf_("# Information: Send Frame Speed=%d R=%d.\n", (int)Speed, R_Gear);
                                 }
                                 if (MAX_RETRY <= Retry) { // Previous enable or disable auto vehicle hold message failed
                                     if(DebugMode == DEBUG){
@@ -320,7 +320,7 @@ int main(void)
                             } else { // Unexpected case
                                 if(DebugMode == DEBUG){
                                     // Output Warning message
-                                    printf_("# Warning: Unexpected case (CCU=%d SCU=%d TCU=%d Speed=%.1f).\n", CcuStatus, ScuStatus, TcuStatus, Speed);
+                                    printf_("# Warning: Unexpected case (CCU=%d SCU=%d TCU=%d Speed=%d).\n", CcuStatus, ScuStatus, TcuStatus, (int)Speed);
                                 }
                             }
                         }
