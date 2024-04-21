@@ -1,6 +1,6 @@
-# Engine Auto Stop Eliminator Firmware for SUBARU Levorg VN5
+# Auto Vehicle Hold(AVH) system auto introduce and remove firmware for SUBARU Levorg VN5
 
-This repository contains sources for the engine start-stop system eliminator firmware for SUBARU Levorg VN5, based off of the [CANable firmware](https://github.com/normaldotcom/canable-fw).
+This repository contains sources for the Auto Vehicle Hold(AVH) system auto introduce and remove firmware for SUBARU Levorg VN5, based off of the [CANable firmware](https://github.com/normaldotcom/canable-fw).
 
 ## Safety disclaimer
 
@@ -15,9 +15,9 @@ These commands are only accepted in debug mode.
 For enable debug mode, you can compile using `make -B DEBUG_MODE=1`.
 If you do not connect the USB CDC port to the host computer (SmartPhone's OTG port,Personal Computer ...), the debug mode will not work properly.
 
-- `M0` - Set mode to Engine Auto Stop Eliminator mode
-- `M1` - Set mode to Engine Auto Stop Eliminator with Debug Message output to USB CDC port (default)
-- `M2` - Disable Engine Auto Stop Eliminator function and dump can bus traffic with candump log formatted output to USB CDC port
+- `M0` - Set mode to AVH Controller mode
+- `M1` - Set mode to AVH Controller with Debug Message output to USB CDC port (default)
+- `M2` - Disable Engine AVH Controller function and dump can bus traffic with candump log formatted output to USB CDC port
 - `V` - Returns firmware version and remote path as a string
 
 This firmware currently does not provide any ACK/NACK feedback for serial commands.
@@ -36,7 +36,7 @@ Your Linux distribution may also have a prebuilt package for `arm-none-eabi-gcc`
 
 ## Flashing with the Bootloader
 
-Simply plug in your CANable with the BOOT jumper enabled (or depress the boot button on the CANable Pro while plugging in). Next, type `make flash` and your CANable will be updated to the engine auto stop eliminator firmware for SUBARU Levorg VN5. Unplug/replug the device after moving the boot jumper back, and your CANable will be up and running as engine auto stop eliminator for SUBARU Levorg VN5.
+Simply plug in your CANable with the BOOT jumper enabled (or depress the boot button on the CANable Pro while plugging in). Next, type `make flash` and your CANable will be updated to the Auto Vehicle Hold(AVH) system auto introduce and remove firmware for SUBARU Levorg VN5. Unplug/replug the device after moving the boot jumper back, and your CANable will be up and running as engine auto stop eliminator for SUBARU Levorg VN5.
 
 ## License
 
