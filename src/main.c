@@ -1,4 +1,4 @@
-//
+８//
 // AVH(Auto Vehicle Hold) auto introduce and remove system firmware for SUBARU Levorg VN5
 //
 
@@ -64,8 +64,7 @@ void print_tx_frame(CAN_TxHeaderTypeDef* tx_msg_header, uint8_t* tx_msg_data){
                                 tx_msg_data[7]);
 }
 
-
-void send_enable_frame(uint8_t* rx_msg_data){
+void transmit_can_frame(uint8_t* rx_msg_data, uint8_t Remove){
     // Storage for transmit message buffer
     CAN_TxHeaderTypeDef tx_msg_header;
     tx_msg_header.IDE = CAN_ID_STD;
@@ -80,44 +79,13 @@ void send_enable_frame(uint8_t* rx_msg_data){
     } else {
         tx_msg_data[1] = rx_msg_data[1] += 0x01;
     }
-    tx_msg_data[2] = rx_msg_data[2] | 0x02; // Enable auto behicle hold bit on
-    tx_msg_data[3] = rx_msg_data[3];
-    tx_msg_data[4] = rx_msg_data[4];
-    tx_msg_data[5] = rx_msg_data[5];
-    tx_msg_data[6] = rx_msg_data[6];
-    tx_msg_data[7] = rx_msg_data[7];
-    // Calculate checksum
-    tx_msg_data[0] = (tx_msg_data[1] +
-                      tx_msg_data[2] +
-                      tx_msg_data[3] +
-                      tx_msg_data[4] +
-                      tx_msg_data[5] +
-                      tx_msg_data[6] +
-                      tx_msg_data[7]) + SUM_CHECK_ADDER;
-    can_tx(&tx_msg_header, tx_msg_data); // Queueing message
-    can_process(); // Transmit message
-    if(DebugMode == DEBUG){
-        printf_("# ");
-        print_tx_frame(&tx_msg_header, tx_msg_data);
-    }
-}
 
-void send_disable_frame(uint8_t* rx_msg_data){
-    // Storage for transmit message buffer
-    CAN_TxHeaderTypeDef tx_msg_header;
-    tx_msg_header.IDE = CAN_ID_STD;
-    tx_msg_header.StdId = CAN_ID_CCU;
-    tx_msg_header.ExtId = 0;
-    tx_msg_header.RTR = CAN_RTR_DATA;
-    tx_msg_header.DLC = 8;
-    uint8_t tx_msg_data[8] = {0};
-
-    if ((rx_msg_data[1] & 0x0f) == 0x0f) {
-        tx_msg_data[1] = rx_msg_data[1] &= 0xf0;
+    if(Remove){
+	tx_msg_data[2] = rx_msg_data[2] | 0x01; // Remove auto behicle hold bit on
     } else {
-        tx_msg_data[1] = rx_msg_data[1] += 0x01;
+        tx_msg_data[2] = rx_msg_data[2] | 0x02; // Introduce auto behicle hold bit on
     }
-    tx_msg_data[2] = rx_msg_data[2] | 0x01; // Disable auto behicle hold bit on
+	
     tx_msg_data[3] = rx_msg_data[3];
     tx_msg_data[4] = rx_msg_data[4];
     tx_msg_data[5] = rx_msg_data[5];
@@ -303,11 +271,7 @@ int main(void)
                                     led_blink(Retry);
                                     for(int i = 0;i < 5;i++){
                                         HAL_Delay(50);
-                                        if(R_Gear){
-                                            send_disable_frame(rx_msg_data); // Transmit message
-                                        } else {
-                                            send_enable_frame(rx_msg_data); // Transmit message
-                                        }
+                                        transmit_can_frame(rx_msg_data, R_Gear); // Transmit can frame for introduce or remove AVH
                                     }
                                     // Discard message(s) that received during HAL_delay()
                                     while(is_can_msg_pending(CAN_RX_FIFO0)){
