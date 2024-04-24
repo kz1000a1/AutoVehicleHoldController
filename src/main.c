@@ -1,4 +1,4 @@
-８//
+//
 // AVH(Auto Vehicle Hold) auto introduce and remove system firmware for SUBARU Levorg VN5
 //
 
