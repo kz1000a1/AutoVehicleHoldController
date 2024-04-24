@@ -229,11 +229,14 @@ int main(void)
 
                     case CAN_ID_CCU:
                         if (PreviousCanId != CAN_ID_TCU) { // TCU don't transmit message
-                            CcuStatus = ENGINE_STOP;
                             TcuStatus = ENGINE_STOP;
+                            ScuStatus = ENGINE_STOP;
+                            CcuStatus = ENGINE_STOP;
                             Status = PROCESSING;
                             led_blink(Status);
                             Retry = 0;
+			    R_Gear = 0;
+                            Speed = 0;
                             if(DebugMode == DEBUG){
                                 // Output Information message
                                 printf_("# Information: ENGINE STOP.\n");
@@ -254,6 +257,7 @@ int main(void)
                                     printf_("# Information: READY.\n");
                                     printf_("# Information: Status (CCU=%d SCU=%d TCU=%d R=%d).\n", CcuStatus, ScuStatus, TcuStatus, R_Gear);
                                 }
+                            // } else if (ScuStatus == AVH_OFF && (! R_Gear) || (ScuStatus == AVH_ON && R_Gear)) { // Transmit message for Enable or disable auto vehicle hold
                             } else if ((ScuStatus == AVH_OFF && (! R_Gear) && 15 < Speed) || (ScuStatus == AVH_ON && R_Gear)) { // Transmit message for Enable or disable auto vehicle hold
                                 if(DebugMode == DEBUG){
                                     // Output Information message
