@@ -173,6 +173,7 @@ int main(void)
                         if(R_Gear != (rx_msg_data[3] == 0x03)){
 			    if(Status == SUCCEEDED){
 				Status = PROCESSING;
+                                led_blink(Status);
 			    }
                             if(R_Gear){
                                 // Output Information message
@@ -181,7 +182,6 @@ int main(void)
                                 // Output Information message
                                 dprintf_("# Information: Change Another to Reverse Gear.\n");
                             }
-                            // R_Gear = (rx_msg_data[3] == 0x03);
                             R_Gear =! R_Gear;
                         }
                         TcuStatus = READY;
