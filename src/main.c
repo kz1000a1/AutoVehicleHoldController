@@ -181,9 +181,10 @@ int main(void)
                                 // Output Information message
                                 dprintf_("# Information: Change Another to Reverse Gear.\n");
                             }
+                            // R_Gear = (rx_msg_data[3] == 0x03);
+                            R_Gear =! R_Gear;
                         }
                         TcuStatus = READY;
-                        R_Gear = (rx_msg_data[3] == 0x03);
                         PreviousCanId = rx_msg_header.StdId;
                         break;
 
