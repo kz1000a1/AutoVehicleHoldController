@@ -174,14 +174,12 @@ int main(void)
 			    if(Status == SUCCEEDED){
 				Status = PROCESSING;
 			    }
-                            if(DebugMode == DEBUG){
-                                if(R_Gear){
-                                    // Output Information message
-                                    printf_("# Information: Change Reverse to Another Gear.\n");
-                                } else {
-                                    // Output Information message
-                                    printf_("# Information: Change Another to Reverse Gear.\n");
-                                }
+                            if(R_Gear){
+                                // Output Information message
+                                dprintf_("# Information: Change Reverse to Another Gear.\n");
+                            } else {
+                                // Output Information message
+                                dprintf_("# Information: Change Another to Reverse Gear.\n");
                             }
                         }
                         TcuStatus = READY;
@@ -192,15 +190,11 @@ int main(void)
                     case CAN_ID_SCU:
                         if (rx_msg_data[5] & 0x20) {
                             ScuStatus = AVH_ON;
-                            if(DebugMode == DEBUG){
-                                // Output Information message
-                                printf_("# Information: Auto vehicle hold On.\n");
-                            }
+                            // Output Information message
+                            dprintf_("# Information: Auto vehicle hold On.\n");
                             if (Retry != 0 && Status == PROCESSING && (! R_Gear)) {
-	                        if(DebugMode == DEBUG){
-                                    // Output Information message
-                                    printf_("# Information: Enable auto vehicle hold succeeded.\n");
-                                }
+                                // Output Information message
+                                dprintf_("# Information: Enable auto vehicle hold succeeded.\n");
                                 Retry = 0;
                                 Status = SUCCEEDED;
 				CcuStatus = READY;
@@ -208,15 +202,11 @@ int main(void)
                             }
                         } else {
                             ScuStatus = AVH_OFF;
-                            if(DebugMode == DEBUG){
-                                // Output Information message
-                                printf_("# Information: Auto vehicle hold Off.\n");
-                            }
+                            // Output Information message
+                            dprintf_("# Information: Auto vehicle hold Off.\n");
                             if (Retry != 0 && Status == PROCESSING && R_Gear) {
-	                        if(DebugMode == DEBUG){
-                                    // Output Information message
-                                    printf_("# Information: Disble auto vehicle hold succeeded.\n");
-                                }
+                                // Output Information message
+                                dprintf_("# Information: Disble auto vehicle hold succeeded.\n");
                                 Retry = 0;
                                 Status = SUCCEEDED;
 				CcuStatus = READY;
@@ -237,37 +227,27 @@ int main(void)
                             Retry = 0;
 			    R_Gear = 0;
                             Speed = 0;
-                            if(DebugMode == DEBUG){
-                                // Output Information message
-                                printf_("# Information: ENGINE STOP.\n");
-                            }
+                            // Output Information message
+                            dprintf_("# Information: ENGINE STOP.\n");
                         } else if (rx_msg_data[2] & 0x03) {
-                            if(DebugMode == DEBUG){
-                                // Output Information message
-                                printf_("# Information: Eliminate engine auto stop cancelled.\n");
-                            }
+                            // Output Information message
+                            dprintf_("# Information: Eliminate engine auto stop cancelled.\n");
                             Status = CANCELLED;
                             led_blink(Status);
                         } else if (Status == PROCESSING) {
                             if (CcuStatus == NOT_READY || CcuStatus == ENGINE_STOP || (ScuStatus == AVH_OFF && R_Gear) || (ScuStatus == AVH_ON && (! R_Gear))) {
-                                printf_("# Information: Status (CCU=%d SCU=%d TCU=%d R=%d).\n", CcuStatus, ScuStatus, TcuStatus, R_Gear);
+                                dprintf_("# Information: Status (CCU=%d SCU=%d TCU=%d R=%d).\n", CcuStatus, ScuStatus, TcuStatus, R_Gear);
                                 CcuStatus = READY;
-                                if(DebugMode == DEBUG){
-                                    // Output Information message
-                                    printf_("# Information: READY.\n");
-                                    printf_("# Information: Status (CCU=%d SCU=%d TCU=%d R=%d).\n", CcuStatus, ScuStatus, TcuStatus, R_Gear);
-                                }
+                                // Output Information message
+                                dprintf_("# Information: READY.\n");
+                                dprintf_("# Information: Status (CCU=%d SCU=%d TCU=%d R=%d).\n", CcuStatus, ScuStatus, TcuStatus, R_Gear);
                             // } else if (ScuStatus == AVH_OFF && (! R_Gear) || (ScuStatus == AVH_ON && R_Gear)) { // Transmit message for Enable or disable auto vehicle hold
                             } else if ((ScuStatus == AVH_OFF && (! R_Gear) && 15 < Speed) || (ScuStatus == AVH_ON && R_Gear)) { // Transmit message for Enable or disable auto vehicle hold
-                                if(DebugMode == DEBUG){
-                                    // Output Information message
-                                    printf_("# Information: Send Frame Speed=%d R=%d.\n", (int)Speed, R_Gear);
-                                }
+                                // Output Information message
+                                dprintf_("# Information: Send Frame Speed=%d R=%d.\n", (int)Speed, R_Gear);
                                 if (MAX_RETRY <= Retry) { // Previous enable or disable auto vehicle hold message failed
-                                    if(DebugMode == DEBUG){
-                                        // Output Warning message
-                                        printf_("# Warning: Enable or disable auto vehicle hold failed\n");
-                                    }
+                                    // Output Warning message
+                                    dprintf_("# Warning: Enable or disable auto vehicle hold failed\n");
                                     Status = FAILED;
                                     led_blink(Status);
                                 } else {
@@ -286,20 +266,16 @@ int main(void)
                                     led_blink(Status);
                                 }
                             } else { // Unexpected case
-                                if(DebugMode == DEBUG){
-                                    // Output Warning message
-                                    printf_("# Warning: Unexpected case (CCU=%d SCU=%d TCU=%d Speed=%d).\n", CcuStatus, ScuStatus, TcuStatus, (int)Speed);
-                                }
+                                // Output Warning message
+                                dprintf_("# Warning: Unexpected case (CCU=%d SCU=%d TCU=%d Speed=%d).\n", CcuStatus, ScuStatus, TcuStatus, (int)Speed);
                             }
                         }
                         PreviousCanId = rx_msg_header.StdId;
                         break;
 
                     default: // Unexpected can id
-                        if(DebugMode == DEBUG){
-                            // Output Warning message
-                            printf_("# Warning: Unexpected can id (0x%03x).\n", rx_msg_header.StdId);
-                        }
+                        // Output Warning message
+                        dprintf_("# Warning: Unexpected can id (0x%03x).\n", rx_msg_header.StdId);
                         break;
                 }
             }
