@@ -167,6 +167,7 @@ int main(void)
                 switch (rx_msg_header.StdId) {
                     case CAN_ID_MCU:
                         Speed = (rx_msg_data[2] + ((rx_msg_data[3] & 0x1f) << 8)) * 0.05625;
+                        PreviousCanId = rx_msg_header.StdId;
                         break;
 			
                     case CAN_ID_TCU:
@@ -219,7 +220,7 @@ int main(void)
                         break;
 
                     case CAN_ID_CCU:
-                        if (PreviousCanId != CAN_ID_TCU) { // TCU don't transmit message
+                        if (PreviousCanId == CAN_ID_CCU) { // TCU don't transmit message
                             TcuStatus = ENGINE_STOP;
                             ScuStatus = ENGINE_STOP;
                             CcuStatus = ENGINE_STOP;
